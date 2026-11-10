@@ -1,0 +1,1643 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DPLocker keeps documents on your USB drive behind a password and authenticator code, and cleans their metadata.">
+<title>DPLocker</title>
+<style>
+/* Hallmark · checked: 2026-11-10 · genre: modern-minimal (inferred) · shape: app screen
+ * floor: 0 FAIL · fixed: 13 (7a, 10a, 19, 26b, 27, 29, 33, 34, 39a, 40, 48, 54, 67) · structural: 1 printed (sidebar kept: 8 destinations)
+ * built: the project · redesign: polish */
+	:root {
+		color-scheme: light;
+		--font-ui: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+		--font-display: "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+		--step--1: 12px; --step-0: 14px; --step-1: 16px; --step-2: 19px; --step-3: 24px;
+		--space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 24px; --space-8: 32px;
+		--radius-s: 8px; --radius-m: 12px; --radius-l: 16px;
+		--dur-micro: 90ms; --dur-short: 160ms; --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+		--canvas: oklch(97.2% 0.006 255);
+		--surface: oklch(99.4% 0.003 255);
+		--raised: oklch(99.4% 0.003 255);
+		--hover: oklch(94.6% 0.012 255);
+		--selected: oklch(92.4% 0.035 258);
+		--ink: oklch(23% 0.03 260);
+		--ink-muted: oklch(46% 0.03 258);
+		--ink-faint: oklch(54% 0.025 258);
+		--line: oklch(90.5% 0.012 255);
+		--type-pdf: oklch(56% 0.19 28);
+		--type-doc: oklch(55% 0.19 262);
+		--type-sheet: oklch(52% 0.13 150);
+		--type-slides: oklch(64% 0.16 55);
+		--type-text: oklch(50% 0.02 258);
+		--field-line: oklch(64% 0.025 258);
+		--accent: oklch(54.6% 0.215 262.9);
+		--accent-strong: oklch(48% 0.21 263);
+		--on-accent: oklch(98.5% 0.008 260);
+		--banner: oklch(54.6% 0.215 262.9);
+		--accent-soft: oklch(54.6% 0.215 262.9 / 0.14);
+		--ok: oklch(50% 0.13 150);
+		--ok-soft: oklch(50% 0.13 150 / 0.12);
+		--bad: oklch(52% 0.19 27);
+		--bad-soft: oklch(52% 0.19 27 / 0.1);
+		--warn-ink: oklch(48% 0.12 65);
+		--warn-surface: oklch(97% 0.035 85);
+		--warn-line: oklch(87% 0.08 80);
+		--toast-surface: oklch(25% 0.03 260);
+		--toast-ink: oklch(95% 0.01 260);
+		--toast-ok: oklch(82% 0.14 150);
+		--toast-bad: oklch(76% 0.13 27);
+		--scrim: oklch(20% 0.03 260 / 0.55);
+		--paper: oklch(99% 0.004 255);
+		--knob: oklch(99% 0.004 255);
+		--shadow-s: 0 1px 2px oklch(20% 0.03 260 / 0.06), 0 4px 12px oklch(20% 0.03 260 / 0.06);
+		--shadow-l: 0 16px 48px oklch(20% 0.03 260 / 0.22);
+		--icon-drop: drop-shadow(0 6px 10px oklch(20% 0.03 260 / 0.14));
+	}
+	@media (prefers-color-scheme: dark) {
+		:root {
+			color-scheme: dark;
+			--canvas: oklch(16% 0.015 260);
+			--surface: oklch(20% 0.018 260);
+			--raised: oklch(23% 0.02 260);
+			--hover: oklch(26.5% 0.022 260);
+			--selected: oklch(31% 0.05 262);
+			--ink: oklch(94% 0.01 260);
+			--ink-muted: oklch(76% 0.02 260);
+			--ink-faint: oklch(70% 0.02 260);
+			--line: oklch(30% 0.02 260);
+			--type-pdf: oklch(64% 0.17 28);
+			--type-doc: oklch(64% 0.15 258);
+			--type-sheet: oklch(62% 0.13 150);
+			--type-slides: oklch(70% 0.14 60);
+			--type-text: oklch(62% 0.02 258);
+			--field-line: oklch(52% 0.025 260);
+			--accent: oklch(72% 0.14 255);
+			--accent-strong: oklch(78% 0.12 255);
+			--on-accent: oklch(20% 0.04 262);
+			--banner: oklch(42% 0.17 263);
+			--accent-soft: oklch(72% 0.14 255 / 0.2);
+			--ok: oklch(78% 0.15 150);
+			--ok-soft: oklch(78% 0.15 150 / 0.16);
+			--bad: oklch(74% 0.15 25);
+			--bad-soft: oklch(74% 0.15 25 / 0.16);
+			--warn-ink: oklch(84% 0.13 85);
+			--warn-surface: oklch(25% 0.04 75);
+			--warn-line: oklch(38% 0.07 75);
+			--toast-surface: oklch(30% 0.025 260);
+			--scrim: oklch(5% 0.01 260 / 0.66);
+			--shadow-s: 0 1px 2px oklch(0% 0 0 / 0.4);
+			--shadow-l: 0 16px 48px oklch(0% 0 0 / 0.55);
+		}
+	}
+	* { box-sizing: border-box; }
+	b, strong { font-weight: 600; }
+	[hidden] { display: none !important; }
+	html, body { height: 100%; overflow: clip; }
+	body {
+		margin: 0; background: var(--canvas); color: var(--ink);
+		font: var(--step-0)/1.5 var(--font-ui);
+		display: grid; grid-template-columns: 256px minmax(0, 1fr) auto; grid-template-rows: 64px minmax(0, 1fr);
+	}
+	::selection { background: var(--accent-soft); color: var(--ink); }
+	* { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+	h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; overflow-wrap: break-word; min-width: 0; margin: 0; }
+	button, input, textarea { font: inherit; color: inherit; }
+	input, textarea {
+		color: var(--ink); background: var(--canvas); border: 1px solid var(--field-line); caret-color: var(--accent);
+		border-radius: var(--radius-s); padding: var(--space-2) var(--space-3); min-height: 40px; width: 100%;
+	}
+	input::placeholder, textarea::placeholder { color: var(--ink-faint); }
+	input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+	input:disabled { background: var(--hover); color: var(--ink-muted); cursor: not-allowed; }
+	a, button, .nav, .card, .recentCard, tr.file { -webkit-tap-highlight-color: transparent; }
+	:is(a, button, .nav, .card, .recentCard, tr.file, .switch span):focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+	.numeric { font-variant-numeric: tabular-nums; }
+
+	header { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-4); }
+	.brand { display: flex; align-items: center; gap: var(--space-3); width: 228px; flex: none; }
+	.wordmark { height: 40px; width: auto; color: var(--ink); display: block; }
+	.authMark { height: 64px; width: auto; color: var(--ink); }
+	.search {
+		flex: 1; max-width: 640px; display: flex; align-items: center; gap: var(--space-2); height: 40px;
+		background: var(--surface); border: 1px solid var(--field-line); border-radius: var(--radius-m); padding: 0 var(--space-3);
+		color: var(--ink-faint);
+	}
+	.search:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; }
+	.search input { border: 0; padding: 0; min-height: 0; background: transparent; outline: none; }
+	.search kbd { font: var(--step--1) var(--font-ui); color: var(--ink-faint); border: 1px solid var(--line); border-radius: var(--space-1); padding: 0 var(--space-2); }
+	.headerActions { margin-left: auto; display: flex; align-items: center; gap: var(--space-1); }
+	.segmented { display: flex; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-m); padding: var(--space-1); margin-right: var(--space-2); }
+	.segmented button {
+		border: 0; background: transparent; color: var(--ink-muted); width: 36px; height: 32px; border-radius: 6px;
+		cursor: pointer; display: grid; place-items: center;
+	}
+	.segmented button[aria-pressed="true"] { background: var(--selected); color: var(--accent-strong); }
+	.iconButton {
+		border: 0; background: transparent; color: var(--ink-muted); width: 40px; height: 40px; border-radius: var(--radius-s);
+		cursor: pointer; display: grid; place-items: center; flex: none;
+		transition: background-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+	}
+	.iconButton:hover { background: var(--hover); color: var(--ink); }
+	:is(.iconButton, .segmented button, .button, .uploadButton, .action):active { transform: scale(0.97); }
+	.avatarButton { border: 0; padding: 0; background: none; cursor: pointer; margin-left: var(--space-2); border-radius: 50%; }
+	.avatarButton img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: block; box-shadow: 0 0 0 1px var(--line); }
+
+	aside { padding: 0 var(--space-3) var(--space-4); display: flex; flex-direction: column; gap: 2px; overflow: auto; }
+	.uploadButton {
+		display: flex; align-items: center; justify-content: center; gap: var(--space-2); border: 0; cursor: pointer;
+		background: var(--accent); color: var(--on-accent); border-radius: var(--radius-m); min-height: 44px; padding: 0 var(--space-4);
+		font-weight: 600; margin: var(--space-1) 0 var(--space-5); box-shadow: var(--shadow-s);
+		transition: background-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+	}
+	.uploadButton:hover { background: var(--accent-strong); }
+	.navLabel { font-size: var(--step--1); color: var(--ink-faint); padding: var(--space-2) var(--space-3) var(--space-1); }
+	.nav {
+		display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-3); height: 36px; border-radius: var(--radius-s);
+		cursor: pointer; color: var(--ink-muted); user-select: none; font-weight: 500; border: 0; background: transparent; width: 100%; text-align: left;
+	}
+	.nav:hover { background: var(--hover); color: var(--ink); }
+	.nav[aria-current="page"] { background: var(--selected); color: var(--ink); }
+	.nav .navIcon { width: 20px; height: 20px; display: grid; place-items: center; flex: none; }
+	.nav .count { margin-left: auto; font-size: var(--step--1); color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+	.storageCard {
+		margin-top: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-l);
+		padding: var(--space-4); display: flex; gap: var(--space-3); align-items: center; color: var(--ink);
+	}
+	.ring { width: 48px; height: 48px; border-radius: 50%; flex: none; display: grid; place-items: center; }
+	.ring span {
+		width: 38px; height: 38px; border-radius: 50%; background: var(--surface); color: var(--ink); display: grid; place-items: center;
+		font-size: var(--step--1); font-weight: 600; font-variant-numeric: tabular-nums;
+	}
+	.storageCard b { display: block; font-weight: 600; }
+	.storageCard small { color: var(--ink-muted); font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+	.madeBy {
+		display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-2); padding: var(--space-2) var(--space-3);
+		text-decoration: none; color: var(--ink-muted); border-radius: var(--radius-m); font-size: var(--step--1); line-height: 1.35;
+	}
+	.madeBy:hover { background: var(--hover); }
+	.madeBy strong { color: var(--ink); display: block; font-size: var(--step-0); font-weight: 600; }
+	.datalLogo { width: 28px; height: 28px; object-fit: contain; }
+	.logoDark { display: none; }
+	@media (prefers-color-scheme: dark) { .logoLight { display: none; } .logoDark { display: block; } }
+
+	main {
+		background: var(--surface); color: var(--ink); border-top-left-radius: var(--radius-l); border: 1px solid var(--line);
+		border-bottom: 0; border-right: 0; overflow: auto; padding: var(--space-6) var(--space-8) var(--space-8);
+	}
+	.mainInner { max-width: 1240px; margin: 0 auto; }
+	.pageHead { display: flex; align-items: baseline; gap: var(--space-3); margin-bottom: var(--space-5); flex-wrap: wrap; }
+	.pageHead h1 { font-size: var(--step-3); font-weight: 600; }
+	.pageHead .sub { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+	.warning {
+		display: flex; gap: var(--space-3); align-items: flex-start; background: var(--warn-surface); border: 1px solid var(--warn-line);
+		color: var(--ink); border-radius: var(--radius-m); padding: var(--space-3) var(--space-4); margin-bottom: var(--space-6);
+	}
+	.warning > svg { color: var(--warn-ink); flex: none; margin-top: 2px; }
+	.warning p { margin: 0; max-width: 75ch; color: var(--ink-muted); }
+	.warning b { display: block; color: var(--ink); }
+	.warning .iconButton { width: 32px; height: 32px; margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2)) 0 auto; }
+	.breakdown { margin-bottom: var(--space-6); }
+	.bar { display: flex; height: 8px; border-radius: var(--space-1); overflow: hidden; background: var(--hover); margin: var(--space-2) 0 var(--space-3); gap: 2px; }
+	.bar div { height: 100%; }
+	.legend { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); font-size: var(--step--1); color: var(--ink-muted); }
+	.legend span { display: flex; align-items: center; gap: var(--space-2); }
+	.legend i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+	.legend b { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+	.sectionTitle { font-size: var(--step-0); font-weight: 600; color: var(--ink); margin: 0 0 var(--space-3); }
+	.recent { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: var(--space-3); margin-bottom: var(--space-8); }
+	.recentCard {
+		display: flex; gap: var(--space-3); align-items: center; background: var(--raised); border: 1px solid var(--line); color: var(--ink);
+		border-radius: var(--radius-m); padding: var(--space-1) var(--space-3); min-height: 48px; cursor: pointer; text-align: left; width: 100%; white-space: nowrap;
+		transition: border-color var(--dur-micro) var(--ease-out);
+	}
+	.recentCard:hover { border-color: var(--accent); }
+	.recentCard .meta { display: block; line-height: 1.3; }
+	.recentCard .fileIcon { width: 22px; height: 28px; }
+	.ellipsis { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+	.meta { color: var(--ink-muted); font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+
+	table { width: 100%; border-collapse: separate; border-spacing: 0; }
+	th {
+		text-align: left; font-weight: 500; color: var(--ink-muted); font-size: var(--step--1); padding: var(--space-2) var(--space-3);
+		border-bottom: 1px solid var(--line); position: sticky; top: calc(-1 * var(--space-6)); background: var(--surface); z-index: 1;
+	}
+	th button { border: 0; background: none; padding: 0; min-height: 32px; display: inline-flex; align-items: center; cursor: pointer; color: inherit; font: inherit; }
+	th button:hover { color: var(--ink); }
+	td { padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--line); white-space: nowrap; height: 52px; }
+	tr.file { cursor: pointer; }
+	tr.file:hover td { background: var(--hover); }
+	tr.file[aria-selected="true"] td { background: var(--selected); color: var(--ink); }
+	.nameCell { display: flex; align-items: center; gap: var(--space-3); max-width: 440px; }
+	.fileIcon { flex: none; width: 24px; height: 30px; }
+	td.muted { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+	.action {
+		border: 0; background: transparent; color: var(--ink-faint); width: 36px; height: 36px; border-radius: var(--radius-s);
+		cursor: pointer; display: inline-grid; place-items: center; transition: background-color var(--dur-micro) var(--ease-out);
+	}
+	.action:hover { background: var(--hover); color: var(--ink); }
+	.action.danger:hover { color: var(--bad); background: var(--bad-soft); }
+	.actionsCell { text-align: right; width: 1%; }
+	.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 184px), 1fr)); gap: var(--space-4); }
+	.card {
+		border: 1px solid var(--line); border-radius: var(--radius-l); overflow: hidden; cursor: pointer; color: var(--ink);
+		background: var(--raised); transition: border-color var(--dur-micro) var(--ease-out);
+	}
+	.card:hover { border-color: var(--ink-faint); }
+	.card[aria-selected="true"] { border-color: var(--accent); outline: 2px solid var(--accent-soft); }
+	.cardPreview { height: 120px; display: grid; place-items: center; }
+	.cardPreview .fileIcon { width: 48px; height: 60px; filter: var(--icon-drop); }
+	.cardBody { padding: var(--space-3); display: flex; align-items: center; gap: var(--space-2); border-top: 1px solid var(--line); }
+	.cardBody > div { min-width: 0; flex: 1; }
+	.cardName { font-weight: 600; }
+	.empty { text-align: center; color: var(--ink-muted); padding: 64px var(--space-4); }
+	.empty strong { display: block; color: var(--ink); font-size: var(--step-1); margin-bottom: var(--space-2); }
+	.emptyArt { width: 180px; height: 140px; margin: 0 auto var(--space-4); display: block; }
+	.skeleton { height: 52px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: var(--space-3); padding: 0 var(--space-3); }
+	.skeleton i { display: block; height: 12px; border-radius: var(--space-1); background: var(--hover); }
+	.trashNotice { background: var(--hover); color: var(--ink-muted); border-radius: var(--radius-m); padding: var(--space-3) var(--space-4); margin-bottom: var(--space-4); }
+
+	#details { width: 0; overflow: hidden; background: var(--surface); color: var(--ink); border-left: 1px solid var(--line); border-top: 1px solid var(--line); }
+	#details.open { width: 368px; }
+	.detailsInner { width: 368px; height: 100%; overflow: auto; padding: var(--space-4) var(--space-5) var(--space-8); }
+	.detailsTop { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); }
+	.detailsTop h2 { font-size: var(--step-0); font-weight: 600; color: var(--ink-muted); }
+	.detailsHero { height: 148px; border-radius: var(--radius-l); display: grid; place-items: center; margin-bottom: var(--space-4); }
+	.detailsHero .fileIcon { width: 64px; height: 80px; filter: var(--icon-drop); }
+	.renameRow { display: flex; gap: var(--space-2); align-items: center; }
+	.renameRow input { font-weight: 600; font-size: var(--step-1); }
+	.renameRow .extension { color: var(--ink-muted); font-weight: 600; }
+	.detailButtons { display: flex; gap: var(--space-2); margin: var(--space-4) 0 var(--space-2); flex-wrap: wrap; }
+	.button {
+		border: 1px solid var(--line); background: var(--raised); color: var(--ink); border-radius: var(--radius-s); min-height: 40px;
+		padding: 0 var(--space-4); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+		font-weight: 500; text-decoration: none; white-space: nowrap;
+		transition: background-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+	}
+	.button:hover { background: var(--hover); }
+	.button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+	.button.primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+	.button.danger { color: var(--bad); }
+	.button.danger:hover { background: var(--bad-soft); }
+	.button.destructive { background: var(--bad); border-color: var(--bad); color: var(--on-accent); }
+	.button:disabled, .button[aria-busy="true"] { background: var(--hover); border-color: var(--line); color: var(--ink-faint); cursor: not-allowed; transform: none; }
+	.button.wide { width: 100%; min-height: 44px; }
+	.infoList { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: var(--space-2) var(--space-3); margin: var(--space-3) 0; }
+	.infoList dt { color: var(--ink-muted); }
+	.infoList dd { margin: 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+	.panelSection { border-top: 1px solid var(--line); padding-top: var(--space-4); margin-top: var(--space-4); }
+	.panelSection h3 { font-size: var(--step-0); font-weight: 600; margin: 0; display: flex; align-items: center; gap: var(--space-2); }
+	.panelHead { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-1); }
+	.panelSection > p, .panelSection form > p { color: var(--ink-muted); margin: 0 0 var(--space-3); }
+	.field { display: flex; flex-direction: column; gap: var(--space-1); margin-bottom: var(--space-3); color: var(--ink-muted); font-weight: 500; }
+	.chip { display: inline-block; font-size: var(--step--1); font-weight: 500; padding: 0 var(--space-2); border-radius: var(--space-5); }
+	.chip.alert { background: var(--bad-soft); color: var(--bad); }
+	.chip.good { background: var(--ok-soft); color: var(--ok); }
+	.note { color: var(--ink-muted); margin: var(--space-2) 0 0; }
+
+	#dropOverlay {
+		position: fixed; inset: var(--space-3); border-radius: var(--radius-l); background: var(--accent-soft);
+		border: 2px dashed var(--accent); display: none; place-items: center; z-index: 25; pointer-events: none;
+	}
+	#dropOverlay div { background: var(--accent); color: var(--on-accent); padding: var(--space-3) var(--space-6); border-radius: var(--radius-m); font-size: var(--step-1); font-weight: 600; box-shadow: var(--shadow-l); }
+	body.dragging #dropOverlay { display: grid; }
+	#toasts { position: fixed; right: var(--space-5); bottom: var(--space-5); display: flex; flex-direction: column; gap: var(--space-2); z-index: 60; max-width: 380px; }
+	.toast { background: var(--toast-surface); color: var(--toast-ink); padding: var(--space-3) var(--space-4); border-radius: var(--radius-m); box-shadow: var(--shadow-l); animation: rise var(--dur-short) var(--ease-out); }
+	.toast b.ok { color: var(--toast-ok); }
+	.toast b.bad { color: var(--toast-bad); }
+	@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+
+	.modalBackdrop { position: fixed; inset: 0; background: var(--scrim); display: grid; place-items: center; z-index: 50; padding: var(--space-4); }
+	.modal { background: var(--surface); color: var(--ink); border-radius: var(--radius-l); padding: var(--space-6); width: 100%; max-width: 440px; box-shadow: var(--shadow-l); animation: rise var(--dur-short) var(--ease-out); max-height: 90vh; overflow: auto; }
+	.modal h2 { font-size: var(--step-2); font-weight: 600; margin: 0 0 var(--space-2); }
+	.modal > p { margin: 0 0 var(--space-5); color: var(--ink-muted); overflow-wrap: anywhere; }
+	.modalHead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-1); }
+	.modalHead h2 { margin: 0; }
+	.modalButtons { display: flex; justify-content: flex-end; gap: var(--space-2); flex-wrap: wrap; }
+	.stack { display: flex; flex-direction: column; gap: var(--space-3); }
+	.toggleRow { display: flex; gap: var(--space-4); align-items: flex-start; justify-content: space-between; }
+	.toggleRow small { color: var(--ink-muted); display: block; font-size: var(--step--1); }
+	.switch { position: relative; width: 44px; height: 24px; flex: none; }
+	.switch input { opacity: 0; width: 0; height: 0; min-height: 0; position: absolute; }
+	.switch span { position: absolute; inset: 0; background: var(--line); border-radius: var(--space-5); cursor: pointer; transition: background-color var(--dur-short) var(--ease-out); }
+	.switch span::before { content: ""; position: absolute; width: 20px; height: 20px; left: 2px; top: 2px; background: var(--knob); border-radius: 50%; box-shadow: var(--shadow-s); transition: transform var(--dur-short) var(--ease-out); }
+	.switch input:checked + span { background: var(--accent); }
+	.switch input:checked + span::before { transform: translateX(20px); }
+	.switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+	.formMessage { min-height: 0; }
+	.formMessage.ok { color: var(--ok); }
+	.formMessage.bad { color: var(--bad); }
+	.codeInput { text-align: center; letter-spacing: 0.3em; font-size: var(--step-2); font-weight: 600; font-variant-numeric: tabular-nums; }
+	.qrBox { text-align: center; }
+	.qrBox img { width: 192px; height: 192px; border-radius: var(--radius-m); background: var(--paper); padding: var(--space-2); border: 1px solid var(--line); }
+	.secretLabel { font-size: var(--step--1); color: var(--ink-muted); margin-top: var(--space-2); }
+	.secret { user-select: all; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+
+	.about { max-width: 460px; padding: var(--space-2); }
+	.aboutBanner { height: 96px; background: var(--banner); border-radius: var(--radius-m) var(--radius-m) 0 0; position: relative; }
+	.aboutBanner img { position: absolute; right: var(--space-4); top: var(--space-3); width: 56px; }
+	.aboutBody { padding: 0 var(--space-5) var(--space-5); text-align: center; }
+	.aboutPhoto {
+		position: relative; z-index: 1; display: block; margin: -56px auto 0;
+		width: 112px; height: 112px; border-radius: 50%; object-fit: cover; border: 4px solid var(--surface); background: var(--paper);
+	}
+	.aboutBody h2 { margin: var(--space-2) 0 0; }
+	.aboutRole { color: var(--accent-strong); font-weight: 600; }
+	@media (prefers-color-scheme: light) { .aboutRole { color: var(--accent); } }
+	.aboutBody > p { color: var(--ink-muted); margin: var(--space-3) auto; max-width: 52ch; }
+	.aboutFacts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); margin: var(--space-4) 0 var(--space-5); text-align: left; }
+	.aboutFacts div { background: var(--canvas); border-radius: var(--radius-s); padding: var(--space-2) var(--space-3); font-size: var(--step--1); color: var(--ink-muted); }
+	.aboutFacts b { display: block; color: var(--ink); font-size: var(--step-0); font-weight: 600; }
+
+	#authScreen { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; padding: var(--space-6) var(--space-4); overflow: auto; background: var(--canvas); }
+	.authCard { background: var(--surface); color: var(--ink); border-radius: var(--radius-l); box-shadow: var(--shadow-l); padding: var(--space-8); width: 100%; max-width: 420px; text-align: center; }
+	.authCard h1 { font-size: var(--step-3); font-weight: 600; margin: var(--space-3) 0 var(--space-2); }
+	.authHint { color: var(--ink-muted); margin: 0 0 var(--space-5); }
+	.authCard form { display: flex; flex-direction: column; gap: var(--space-3); text-align: left; }
+	.authCard label { color: var(--ink-muted); display: flex; flex-direction: column; gap: var(--space-2); }
+	.step { display: flex; gap: var(--space-3); align-items: center; margin-top: var(--space-2); }
+	.step b { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--selected); color: var(--accent-strong); font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+	.authError { color: var(--bad); min-height: 20px; }
+	.authWarning { text-align: left; background: var(--warn-surface); border: 1px solid var(--warn-line); border-radius: var(--radius-m); padding: var(--space-3); margin-bottom: var(--space-4); color: var(--ink-muted); }
+	.authWarning b { color: var(--ink); }
+	.authFooter { display: flex; align-items: center; justify-content: center; gap: var(--space-2); margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--line); color: var(--ink-muted); text-decoration: none; font-size: var(--step--1); }
+	.authFooter .datalLogo { width: 24px; height: 24px; }
+	.authFooter:hover b { color: var(--accent); }
+
+	.driveList { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-3); text-align: left; }
+	.driveOption {
+		display: flex; align-items: center; gap: var(--space-3); width: 100%; min-height: 48px; padding: var(--space-1) var(--space-3); white-space: nowrap;
+		border: 1px solid var(--field-line); border-radius: var(--radius-m); background: var(--raised); color: var(--ink); cursor: pointer; text-align: left;
+		transition: border-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out);
+	}
+	.driveOption:hover { border-color: var(--accent); }
+	.driveOption:active { transform: scale(0.97); }
+	.driveOption svg { color: var(--accent); flex: none; }
+	.driveOption b { display: block; line-height: 1.3; }
+	.driveOption > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+	.driveOption .meta { line-height: 1.3; }
+	.factButton {
+		background: var(--canvas); border: 0; border-radius: var(--radius-s); padding: var(--space-2) var(--space-3); text-align: left;
+		font-size: var(--step--1); color: var(--ink-muted); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out);
+	}
+	.factButton:hover { background: var(--hover); }
+	.factButton b { display: block; color: var(--accent-strong); font-size: var(--step-0); }
+	@media (prefers-color-scheme: light) { .factButton b { color: var(--accent); } }
+	.licenseModal { max-width: 680px; }
+	.licenseTabs { width: fit-content; margin: var(--space-3) 0; }
+	.licenseTabs button { width: auto; padding: 0 var(--space-3); }
+	.licenseText {
+		background: var(--canvas); color: var(--ink-muted); border-radius: var(--radius-s); padding: var(--space-4); margin: 0;
+		max-height: 52vh; overflow: auto; white-space: pre-wrap; font: var(--step--1)/1.6 var(--font-ui);
+	}
+	.update {
+		display: flex; gap: var(--space-3); align-items: flex-start; background: var(--selected); color: var(--ink);
+		border-radius: var(--radius-m); padding: var(--space-4); margin-bottom: var(--space-6);
+	}
+	.update > svg { color: var(--accent-strong); flex: none; margin-top: 2px; }
+	@media (prefers-color-scheme: light) { .update > svg { color: var(--accent); } }
+	.update h2 { font-size: var(--step-1); font-weight: 600; }
+	.update p { margin: var(--space-1) 0 0; color: var(--ink-muted); max-width: 75ch; white-space: pre-line; }
+	.updateBody { min-width: 0; }
+	.update .detailButtons { margin-bottom: 0; }
+	@media (prefers-reduced-motion: reduce) {
+		*, *::before, *::after { animation: none !important; transition: none !important; }
+	}
+	@media (max-width: 960px) {
+		body { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr); }
+		.brand { width: auto; }
+		.search kbd, .hideNarrow { display: none; }
+		aside { flex-direction: row; overflow-x: auto; padding: var(--space-2) var(--space-3); align-items: center; }
+		.uploadButton { margin: 0 var(--space-2) 0 0; flex: none; }
+		.navLabel, .storageCard, .madeBy { display: none; }
+		.nav { flex: none; width: auto; height: 44px; }
+		main { border-radius: var(--radius-l) var(--radius-l) 0 0; padding: var(--space-4); border-right: 1px solid var(--line); }
+		#details.open { position: fixed; inset: 0; width: 100%; z-index: 30; }
+		.detailsInner { width: 100%; }
+		.action, .iconButton { width: 44px; height: 44px; }
+		.recent { margin-bottom: var(--space-6); }
+	}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">__LOGO_SYMBOLS__</svg>
+
+<header>
+	<div class="brand">
+		<svg class="wordmark" role="img" aria-label="DPLocker" viewBox="__WORDMARK_VIEWBOX__"><use href="#dpWordmark"/></svg>
+	</div>
+	<label class="search">
+		<svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" >
+			<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+		<input id="search" type="search" placeholder="Search your locker" autocomplete="off" aria-label="Search files">
+		<kbd>/</kbd>
+	</label>
+	<div class="headerActions">
+		<div class="segmented hideNarrow" role="group" aria-label="Layout">
+			<button id="listViewButton" title="List view" aria-label="List view" aria-pressed="true"><svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg></button>
+			<button id="gridViewButton" title="Grid view" aria-label="Grid view" aria-pressed="false"><svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg></button>
+		</div>
+		<button class="iconButton" id="lockButton" title="Lock now" aria-label="Lock now"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg></button>
+		<button class="iconButton" id="settingsButton" title="Settings" aria-label="Settings"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg></button>
+		<button class="avatarButton" id="aboutButton" title="About DPLocker" aria-label="About DPLocker"><img alt="" src="data:image/jpeg;base64,__PHOTO__"></button>
+	</div>
+</header>
+
+<aside>
+	<button class="uploadButton" id="uploadButton" type="button">
+		<svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m-5 5 5-5 5 5M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+		Upload files
+	</button>
+	<div class="navLabel" id="libraryLabel">Library</div>
+	<nav id="navList" aria-labelledby="libraryLabel"></nav>
+	<div class="storageCard">
+		<div class="ring" id="storageRing"><span id="storagePercent">…</span></div>
+		<div><b id="storageTitle">USB drive</b><small id="storageText">Reading drive…</small></div>
+	</div>
+	<a class="madeBy" href="https://datalprojects.com" target="_blank" rel="noopener">
+		<img class="datalLogo logoLight" alt="DATAL Projects logo" src="data:image/png;base64,__LOGO_BLACK__">
+		<img class="datalLogo logoDark" alt="DATAL Projects logo" src="data:image/png;base64,__LOGO_WHITE__">
+		<div><strong>DATAL Projects</strong>datalprojects.com</div>
+	</a>
+</aside>
+
+<main><div class="mainInner">
+	<div class="pageHead"><h1 id="viewTitle">All files</h1><span class="sub" id="viewSub"></span></div>
+	<section class="update" id="updateBanner" hidden aria-labelledby="updateTitle">
+		<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>
+		<div class="updateBody">
+			<h2 id="updateTitle">DPLocker <span id="updateVersion"></span> is available</h2>
+			<p id="updateNotes"></p>
+			<div class="detailButtons">
+				<button type="button" class="button primary" id="updateNow">Update now</button>
+				<button type="button" class="button" id="updateLater">Not now</button>
+				<button type="button" class="button" id="updateSkip">Skip this version</button>
+			</div>
+		</div>
+	</section>
+	<div class="warning" id="warningBanner" hidden>
+		<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg>
+		<p><b>Don’t lose your files</b>
+			Keep a second copy of anything important on another drive or in the cloud. Use “Safely Remove” before unplugging, never pull the USB out while files are saving, and don’t format this drive. A forgotten password or a lost authenticator locks DPLocker for good.</p>
+		<button class="iconButton" id="dismissWarning" title="Hide reminder" aria-label="Hide reminder"><svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+	</div>
+	<div id="overview"></div>
+	<div id="content" aria-live="polite"></div>
+</div></main>
+
+<section id="details" aria-label="File details"><div class="detailsInner" id="detailsInner"></div></section>
+
+<div id="authScreen" hidden>
+	<div class="authCard">
+		<svg class="authMark" aria-hidden="true" focusable="false" viewBox="__MARK_VIEWBOX__"><use href="#dpMark"/></svg>
+		<div id="drivePanel" hidden>
+			<h1>Choose your USB drive</h1>
+			<p class="authHint">DPLocker keeps your files only on a USB drive, never on this PC. Pick the drive to open.</p>
+			<div class="driveList" id="driveList"></div>
+			<div class="authError" id="driveError"></div>
+			<button type="button" class="button wide" id="driveRefresh">Check for drives again</button>
+		</div>
+		<div id="setupPanel" hidden>
+			<h1>Protect DPLocker</h1>
+			<p class="authHint">Set a password and link an authenticator. You’ll need both every time you open DPLocker.</p>
+			<div class="authWarning"><b>Before you start:</b> there is no password recovery. Write your password down somewhere safe and keep your authenticator. Keep a second copy of important files, because a USB drive can be lost or fail.</div>
+			<form id="setupForm" autocomplete="off">
+				<label>Name shown in your authenticator<input id="setupAccount" value="USB Drive" maxlength="40"></label>
+				<div class="step"><b>1</b> Scan this with your authenticator app or extension</div>
+				<div class="qrBox" id="setupQr"></div>
+				<div class="step"><b>2</b> Choose a password</div>
+				<input type="password" id="setupPassword" placeholder="Password, 6 characters or more" aria-label="Password" required minlength="6">
+				<input type="password" id="setupConfirm" placeholder="Confirm password" aria-label="Confirm password" required>
+				<div class="step"><b>3</b> Enter the 6-digit code it shows</div>
+				<input id="setupCode" class="codeInput" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="000000" aria-label="Authenticator code" required>
+				<div class="authError" id="setupError"></div>
+				<button type="submit" class="button primary wide">Turn on protection</button>
+			</form>
+		</div>
+		<div id="loginPanel" hidden>
+			<h1>DPLocker is locked</h1>
+			<p class="authHint">Enter your password and the code from your authenticator.</p>
+			<form id="loginForm" autocomplete="off">
+				<input type="password" id="loginPassword" placeholder="Password" aria-label="Password" required>
+				<input id="loginCode" class="codeInput" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="000000" aria-label="Authenticator code" required>
+				<div class="authError" id="loginError"></div>
+				<button type="submit" class="button primary wide">Open DPLocker</button>
+			</form>
+		</div>
+		<a class="authFooter" href="https://datalprojects.com" target="_blank" rel="noopener">
+			<img class="datalLogo logoLight" alt="" src="data:image/png;base64,__LOGO_BLACK__">
+			<img class="datalLogo logoDark" alt="" src="data:image/png;base64,__LOGO_WHITE__">
+			<span>DPLocker by <b>DATAL Projects</b></span>
+		</a>
+	</div>
+</div>
+
+<div class="modalBackdrop" id="settingsBackdrop" hidden>
+	<div class="modal" role="dialog" aria-modal="true" aria-label="Settings">
+		<div class="modalHead"><h2>Settings</h2><button class="iconButton" data-close="settingsBackdrop" title="Close" aria-label="Close"><svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+		<div class="formMessage" id="settingsMessage"></div>
+		<div class="panelSection" style="border-top:0;margin-top:var(--space-2);padding-top:var(--space-2)">
+			<h3>Privacy</h3>
+			<div class="toggleRow">
+				<div>Clean metadata on upload<small>Strips author, company, comments, software and edit history from new PDF, Word, Excel, PowerPoint and OpenDocument files.</small></div>
+				<label class="switch"><input type="checkbox" id="autoCleanToggle" aria-label="Clean metadata on upload"><span></span></label>
+			</div>
+			<div class="toggleRow" style="margin-top:12px">
+				<div>Check for updates automatically<small>Looks for a newer release on GitHub when DPLocker opens. Updates only install when you choose.</small></div>
+				<label class="switch"><input type="checkbox" id="updateToggle" aria-label="Check for updates automatically"><span></span></label>
+			</div>
+			<div class="toggleRow" style="margin-top:12px">
+				<div>Show safety reminder<small>The “Don’t lose your files” banner on the main screen.</small></div>
+				<label class="switch"><input type="checkbox" id="warningToggle" aria-label="Show safety reminder"><span></span></label>
+			</div>
+		</div>
+		<div class="panelSection stack">
+			<h3>Updates</h3>
+			<p id="updateStatus">DPLocker __VERSION__</p>
+			<button type="button" class="button wide" id="updateCheckNow">Check for updates</button>
+		</div>
+		<form id="passwordForm" class="panelSection stack" autocomplete="off">
+			<h3>Change password</h3>
+			<input type="password" id="currentPassword" placeholder="Current password" aria-label="Current password" required>
+			<input type="password" id="newPassword" placeholder="New password (6 characters or more)" aria-label="New password" required minlength="6">
+			<input type="password" id="newPasswordConfirm" placeholder="Confirm new password" aria-label="Confirm new password" required>
+			<input id="passwordCode" class="codeInput" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="Code" aria-label="Authenticator code" required>
+			<button type="submit" class="button primary wide">Change password</button>
+		</form>
+		<div class="panelSection stack">
+			<h3>Re-link authenticator</h3>
+			<p>Use this if you got a new phone or reinstalled your authenticator.</p>
+			<input id="relinkAccount" value="USB Drive" maxlength="40" placeholder="Name shown in authenticator" aria-label="Name shown in authenticator">
+			<button type="button" class="button wide" id="relinkStart">Show new QR code</button>
+			<div class="qrBox" id="relinkQr"></div>
+			<form id="relinkForm" class="stack" autocomplete="off" hidden>
+				<input type="password" id="relinkPassword" placeholder="Password" aria-label="Password" required>
+				<input id="relinkCode" class="codeInput" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="New code" aria-label="Code from the new authenticator entry" required>
+				<button type="submit" class="button primary wide">Switch authenticator</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="modalBackdrop" id="aboutBackdrop" hidden>
+	<div class="modal about" role="dialog" aria-modal="true" aria-label="About DPLocker">
+		<div class="aboutBanner"><img alt="" src="data:image/png;base64,__LOGO_WHITE__"></div>
+		<div class="aboutBody">
+			<img class="aboutPhoto" alt="John Nathaniel Joseph G. Madrid" src="data:image/jpeg;base64,__PHOTO__">
+			<h2>John Nathaniel Joseph G. Madrid</h2>
+			<div class="aboutRole">Chief Technology Officer, DATAL Projects</div>
+			<p>Developer of DPLocker, an open-source USB file locker. Files are encrypted on the drive behind a password and an authenticator code, with metadata cleaning built in.</p>
+			<div class="aboutFacts">
+				<div><b>DPLocker __VERSION__</b>Portable, offline</div>
+				<button type="button" class="factButton" id="licenseButton"><b>Open source</b>MIT License</button>
+				<div><b>Made in the Philippines</b>Las Piñas City</div>
+				<div><b>Built by</b>DATAL Projects</div>
+			</div>
+			<div class="modalButtons" style="justify-content:center">
+				<a class="button primary" href="https://datalprojects.com" target="_blank" rel="noopener">Visit datalprojects.com</a>
+				<button class="button" data-close="aboutBackdrop">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modalBackdrop" id="licenseBackdrop" hidden>
+	<div class="modal licenseModal" role="dialog" aria-modal="true" aria-labelledby="licenseTitle">
+		<div class="modalHead"><h2 id="licenseTitle">Licenses</h2><button class="iconButton" data-close="licenseBackdrop" title="Close" aria-label="Close"><svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+		<div class="segmented licenseTabs" role="group" aria-label="License document">
+			<button type="button" data-doc="license" aria-pressed="true">DPLocker</button>
+			<button type="button" data-doc="notices" aria-pressed="false">Third-party</button>
+		</div>
+		<pre class="licenseText" id="licenseText" tabindex="0"></pre>
+	</div>
+</div>
+
+<div id="dropOverlay"><div>Drop files into your locker</div></div>
+<div id="toasts" role="status" aria-live="polite"></div>
+<input type="file" id="filePicker" multiple hidden aria-label="Choose files to upload">
+
+<script>
+	const TOKEN = new URLSearchParams(location.search).get("t") || ""
+	const PING_INTERVAL_MS = 4000
+	const SESSION_KEY = "dplockerSession"
+	const LAYOUT_KEY = "dplockerLayout"
+	const RECENT_COUNT = 4
+	const STROKE = `fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`
+	const FIELD_LABELS = {
+		title: "Title", subject: "Subject", author: "Author", keywords: "Keywords", comments: "Comments",
+		lastModifiedBy: "Last modified by", category: "Category", company: "Company", manager: "Manager",
+	}
+	const TYPE_LABELS = {
+		"PDFs": "PDF document", "Word Documents": "Word document", "Spreadsheets": "Spreadsheet",
+		"Presentations": "Presentation", "Text Files": "Text file",
+	}
+	const INFO_LABELS = {
+		application: "Created with", producer: "PDF producer", created: "Created", modified: "Last saved",
+		revision: "Revision", template: "Template", editingMinutes: "Editing time (min)",
+		customProperties: "Custom properties", xmpMetadata: "XMP metadata",
+	}
+
+	const NAV_ICONS = {
+		all: `<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" ${STROKE}><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/></svg>`,
+		"PDFs": `<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" ${STROKE}><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M8.5 16.5c2-1 4.5-4.5 4-7-.4-1.6-2-.5-1.4 1.5.7 2.2 2.8 4.4 4.9 4.6 1.6.1 1.4-1.3-.4-1.3-2.4 0-5.6 1.4-7.1 2.2z"/></svg>`,
+		"Word Documents": `<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" ${STROKE}><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M8.5 12h7M8.5 15.5h7M8.5 8.5h3"/></svg>`,
+		"Spreadsheets": `<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" ${STROKE}><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/></svg>`,
+		"Presentations": `<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" ${STROKE}><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/><path d="M10 8.5v4l3.5-2z"/></svg>`,
+		"Text Files": `<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" ${STROKE}><path d="M5 6h14M5 10.5h14M5 15h9M5 19.5h6"/></svg>`,
+		trash: `<svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" ${STROKE}><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>`,
+	}
+	const ICONS = {
+		restore: `<svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" ${STROKE}><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>`,
+		purge: `<svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" ${STROKE}><path d="M4 7h16M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3M10 11l4 6M14 11l-4 6"/></svg>`,
+		open: `<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" ${STROKE}><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>`,
+		close: `<svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" ${STROKE}><path d="M6 6l12 12M18 6 6 18"/></svg>`,
+		shield: `<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" ${STROKE}><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>`,
+		sparkle: `<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" ${STROKE}><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg>`,
+		files: `<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" ${STROKE}><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>`,
+		drive: `<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" ${STROKE}><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M9.5 6h1M13.5 6h1M6 14h12"/></svg>`,
+		clock: `<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" ${STROKE}><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
+		lock: `<svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24" ${STROKE}><rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>`,
+	}
+	const FILE_GLYPHS = {
+		"PDFs": `<text x="16" y="27" text-anchor="middle" font-size="8.5" font-weight="800" fill="#fff" font-family="Segoe UI, sans-serif">PDF</text>`,
+		"Word Documents": `<path d="M9 18h14M9 22h14M9 26h9" stroke="#fff" stroke-width="2" stroke-linecap="round"/>`,
+		"Spreadsheets": `<path d="M9 17h14v11H9zM9 22.5h14M16 17v11" fill="none" stroke="#fff" stroke-width="1.8"/>`,
+		"Presentations": `<rect x="9" y="17" width="14" height="9" rx="1.5" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M14.5 19.3v4.4l3.6-2.2z" fill="#fff"/>`,
+		"Text Files": `<path d="M10 18h12M10 22h12M10 26h7" stroke="#fff" stroke-width="2" stroke-linecap="round"/>`,
+	}
+	const EMPTY_ART = `<svg aria-hidden="true" focusable="false" class="emptyArt" viewBox="0 0 180 140">
+		<ellipse cx="90" cy="128" rx="70" ry="8" fill="currentColor" opacity=".08"/>
+		<g transform="rotate(-12 55 70)"><rect x="30" y="30" width="50" height="64" rx="8" fill="#ef4444"/>
+			<text x="55" y="70" text-anchor="middle" font-size="14" font-weight="800" fill="#fff" font-family="Segoe UI">PDF</text></g>
+		<g transform="rotate(10 125 70)"><rect x="100" y="30" width="50" height="64" rx="8" fill="#16a34a"/>
+			<path d="M110 50h30v30h-30zM110 65h30M125 50v30" fill="none" stroke="#fff" stroke-width="3"/></g>
+		<rect x="62" y="18" width="56" height="72" rx="9" fill="var(--accent)"/>
+		<path d="M73 40h34M73 50h34M73 60h22" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+		<circle cx="128" cy="100" r="18" fill="#1d4ed8"/>
+		<path d="M128 108V92m-6 6 6-6 6 6" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+	</svg>`
+
+	const $ = (id) => document.getElementById(id)
+	let session = ""
+	let categories = []
+	let categoryByExtension = {}
+	let maxFileSizeMB = 25
+	let allFiles = []
+	let trashFiles = []
+	let settings = { autoClean: false, warningDismissed: false }
+	let storage = { total: 0, free: 0 }
+	let activeView = "all"
+	let sortKey = "modified"
+	let sortAscending = false
+	let connected = true
+	let selectedKey = ""
+	let layout = "list"
+	try {
+		session = sessionStorage.getItem(SESSION_KEY) || ""
+		layout = localStorage.getItem(LAYOUT_KEY) || "list"
+	} catch (error) {
+		// Storage can be blocked; defaults still work for this page load.
+	}
+
+	function setSession(value) {
+		session = value
+		try {
+			if (value) {
+				sessionStorage.setItem(SESSION_KEY, value)
+			} else {
+				sessionStorage.removeItem(SESSION_KEY)
+			}
+		} catch (error) {
+			// Session still works until the page reloads.
+		}
+	}
+
+	async function api(path, options = {}) {
+		const response = await fetch(path, {
+			...options,
+			headers: { "X-Token": TOKEN, "X-Session": session, ...(options.headers || {}) },
+		})
+		if (response.status === 401) {
+			setSession("")
+			showAuth("login")
+			throw new Error("locked")
+		}
+		return response
+	}
+
+	function postJSON(path, body) {
+		return api(path, {
+			method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+		}).then((response) => response.json())
+	}
+
+	function getExtension(name) {
+		return name.includes(".") ? name.split(".").pop().toLowerCase() : ""
+	}
+
+	function formatSize(bytes) {
+		const units = ["B", "KB", "MB", "GB", "TB"]
+		let value = bytes
+		let index = 0
+		while (value >= 1024 && index < units.length - 1) {
+			value /= 1024
+			index += 1
+		}
+		return (index === 0 ? value : value.toFixed(value < 10 ? 1 : 0)) + " " + units[index]
+	}
+
+	function formatDate(timestamp) {
+		return new Date(timestamp).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })
+	}
+
+	function formatRelative(timestamp) {
+		const minutes = Math.round((Date.now() - timestamp) / 60000)
+		if (minutes < 1) {
+			return "just now"
+		}
+		if (minutes < 60) {
+			return minutes + " min ago"
+		}
+		const hours = Math.round(minutes / 60)
+		if (hours < 24) {
+			return hours + " h ago"
+		}
+		const days = Math.round(hours / 24)
+		return days < 30 ? days + " days ago" : formatDate(timestamp)
+	}
+
+	// PDF dates look like D:20261110172935+08'00'; Office/ODF use ISO 8601.
+	function formatMetaDate(value) {
+		const pdf = /^D:(\d{4})(\d{2})(\d{2})(\d{2})?(\d{2})?/.exec(value)
+		const date = pdf ? new Date(`${pdf[1]}-${pdf[2]}-${pdf[3]}T${pdf[4] || "00"}:${pdf[5] || "00"}:00`) : new Date(value)
+		return isNaN(date) ? value : date.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })
+	}
+
+	function escapeHtml(text) {
+		const element = document.createElement("span")
+		element.textContent = text == null ? "" : String(text)
+		return element.innerHTML
+	}
+
+	function toast(html) {
+		const element = document.createElement("div")
+		element.className = "toast"
+		element.innerHTML = html
+		$("toasts").appendChild(element)
+		setTimeout(() => element.remove(), 4500)
+	}
+
+	function fileIcon(category) {
+		return `<svg aria-hidden="true" focusable="false" class="fileIcon" viewBox="0 0 32 40">
+			<path d="M4 0h16l12 12v24a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z" style="fill:${category.color}"/>
+			<path d="M20 0v8a4 4 0 0 0 4 4h8z" fill="#fff" fill-opacity=".45"/>
+			${FILE_GLYPHS[category.folder] || ""}</svg>`
+	}
+
+	function fileKey(entry) {
+		return `${entry.category.folder}/${entry.month}/${entry.name}`
+	}
+
+	function showClosed(error) {
+		if (error && error.message === "locked") {
+			return
+		}
+		connected = false
+		$("authScreen").hidden = true
+		closeDetails()
+		$("overview").innerHTML = ""
+		$("content").innerHTML = `<div class="empty" role="alert">${EMPTY_ART}<strong>DPLocker has closed</strong>
+			Open DPLocker.exe on your USB drive to continue.</div>`
+	}
+
+	async function loadConfig() {
+		const config = await api("/api/config").then((response) => response.json())
+		categories = config.categories
+		maxFileSizeMB = config.maxFileSizeMB
+		categoryByExtension = {}
+		for (const category of categories) {
+			for (const extension of category.extensions) {
+				categoryByExtension[extension] = category
+			}
+		}
+		$("filePicker").accept = Object.keys(categoryByExtension).map((e) => "." + e).join(",")
+		const driveLetter = /^[A-Za-z]:/.exec(config.location)
+		$("storageTitle").textContent = driveLetter ? `USB drive (${driveLetter[0].toUpperCase()})` : "USB drive"
+		settings = await api("/api/settings").then((response) => response.json())
+	}
+
+	async function refreshFiles() {
+		try {
+			const attach = (list) => list
+				.map((f) => ({ ...f, category: categories.find((c) => c.folder === f.category) }))
+				.filter((f) => f.category)
+			const [main, trash, space] = await Promise.all([
+				api("/api/files").then((r) => r.json()),
+				api("/api/files?trash=1").then((r) => r.json()),
+				api("/api/storage").then((r) => r.json()),
+			])
+			allFiles = attach(main)
+			trashFiles = attach(trash)
+			storage = space
+			render()
+		} catch (error) {
+			showClosed(error)
+		}
+	}
+
+	function renderSidebar() {
+		const items = [{ key: "all", label: "All files", color: "var(--accent)", count: allFiles.length }]
+		for (const category of categories) {
+			items.push({ key: category.folder, label: category.folder, color: category.color,
+				count: allFiles.filter((f) => f.category === category).length })
+		}
+		items.push({ key: "trash", label: "Trash", color: "var(--ink-faint)", count: trashFiles.length })
+		$("navList").innerHTML = ""
+		for (const item of items) {
+			const nav = document.createElement("button")
+			nav.type = "button"
+			nav.className = "nav"
+			if (item.key === activeView) {
+				nav.setAttribute("aria-current", "page")
+			}
+			nav.innerHTML = `<span class="navIcon" style="color:${item.color}">${NAV_ICONS[item.key] || ""}</span>`
+				+ `<span>${item.label}</span><span class="count">${item.count || ""}</span>`
+			nav.addEventListener("click", () => {
+				activeView = item.key
+				closeDetails()
+				render()
+			})
+			$("navList").appendChild(nav)
+		}
+		const used = storage.total - storage.free
+		const percent = storage.total ? Math.round((used / storage.total) * 100) : 0
+		const color = percent > 90 ? "var(--bad)" : percent > 75 ? "var(--warn-ink)" : "var(--accent)"
+		$("storageRing").style.background = `conic-gradient(${color} ${percent * 3.6}deg, var(--hover) 0)`
+		$("storagePercent").textContent = storage.total ? percent + "%" : "n/a"
+		$("storageText").textContent = storage.total
+			? `${formatSize(storage.free)} free of ${formatSize(storage.total)}` : "Size unavailable"
+	}
+
+	function renderOverview(inTrash, query) {
+		$("warningBanner").hidden = settings.warningDismissed || inTrash
+		if (activeView !== "all" || query) {
+			$("overview").innerHTML = ""
+			return
+		}
+		const totalBytes = allFiles.reduce((sum, f) => sum + f.size, 0)
+		const segments = categories.map((category) => {
+			const bytes = allFiles.filter((f) => f.category === category).reduce((sum, f) => sum + f.size, 0)
+			return { category, bytes }
+		}).filter((s) => s.bytes > 0)
+		const recent = [...allFiles].sort((a, b) => b.modified - a.modified).slice(0, RECENT_COUNT)
+		$("overview").innerHTML = `
+			${segments.length ? `<section class="breakdown" aria-label="Storage by type">
+				<div class="bar" role="img" aria-label="${segments.map((s) => `${s.category.folder} ${formatSize(s.bytes)}`).join(", ")}">${segments.map((s) =>
+					`<div style="width:${(s.bytes / totalBytes) * 100}%;background:${s.category.color}"></div>`).join("")}</div>
+				<div class="legend">${segments.map((s) => `<span><i style="background:${s.category.color}"></i>${s.category.folder} <b>${formatSize(s.bytes)}</b></span>`).join("")}</div></section>` : ""}
+			${recent.length ? `<h2 class="sectionTitle">Recent</h2><div class="recent">${recent.map((f, index) => `
+				<button type="button" class="recentCard" data-recent="${index}">${fileIcon(f.category)}
+					<span class="ellipsis"><span class="ellipsis" style="display:block;font-weight:600">${escapeHtml(f.name)}</span>
+					<span class="meta">${formatSize(f.size)}, ${formatRelative(f.modified)}</span></span></button>`).join("")}</div>
+				<h2 class="sectionTitle">Every file</h2>` : ""}`
+		$("overview").querySelectorAll("[data-recent]").forEach((card) => {
+			const entry = recent[Number(card.dataset.recent)]
+			card.addEventListener("click", () => selectFile(entry))
+			card.addEventListener("dblclick", () => openFile(entry))
+		})
+	}
+
+	function render() {
+		if (!connected) {
+			return
+		}
+		renderSidebar()
+		const inTrash = activeView === "trash"
+		const query = $("search").value.trim().toLowerCase()
+		$("viewTitle").textContent = activeView === "all" ? "All files" : inTrash ? "Trash" : activeView
+		renderOverview(inTrash, query)
+		$("listViewButton").setAttribute("aria-pressed", String(layout === "list"))
+		$("gridViewButton").setAttribute("aria-pressed", String(layout === "grid"))
+
+		const visible = (inTrash ? trashFiles : allFiles)
+			.filter((f) => activeView === "all" || inTrash || f.category.folder === activeView)
+			.filter((f) => !query || f.name.toLowerCase().includes(query))
+			.sort((a, b) => {
+				const left = sortKey === "name" ? a.name.toLowerCase() : a[sortKey]
+				const right = sortKey === "name" ? b.name.toLowerCase() : b[sortKey]
+				const order = left < right ? -1 : left > right ? 1 : 0
+				return sortAscending ? order : -order
+			})
+		const visibleBytes = visible.reduce((sum, f) => sum + f.size, 0)
+		$("viewSub").textContent = `${visible.length} file${visible.length === 1 ? "" : "s"}, ${formatSize(visibleBytes)}`
+
+		if (visible.length === 0) {
+			const allowed = Object.keys(categoryByExtension).map((e) => "." + e).join(" ")
+			$("content").innerHTML = inTrash && !query
+				? `<div class="empty">${EMPTY_ART}<strong>Trash is empty</strong>Files you delete wait here until you restore them or delete them forever.</div>`
+				: query
+					? `<div class="empty">${EMPTY_ART}<strong>No matches</strong>Try a different search.</div>`
+					: `<div class="empty">${EMPTY_ART}<strong>Drop files here</strong>Or choose Upload files. Accepted: ${allowed}, up to ${maxFileSizeMB} MB each.</div>`
+			return
+		}
+
+		const actionButtons = (index) => (inTrash
+			? `<button type="button" class="action" data-action="restore" data-index="${index}" title="Restore" aria-label="Restore ${escapeHtml(visible[index].name)}">${ICONS.restore}</button>
+				<button type="button" class="action danger" data-action="purge" data-index="${index}" title="Delete forever" aria-label="Delete ${escapeHtml(visible[index].name)} forever">${ICONS.purge}</button>`
+			: `<button type="button" class="action danger" data-action="delete" data-index="${index}" title="Move to Trash" aria-label="Move ${escapeHtml(visible[index].name)} to Trash">${NAV_ICONS.trash}</button>`)
+		const notice = inTrash ? `<p class="trashNotice">Files in Trash still use space on the drive.</p>` : ""
+
+		if (layout === "grid") {
+			$("content").innerHTML = notice + `<div class="grid" role="listbox" aria-label="Files">${visible.map((f, index) => `
+				<div class="card" role="option" tabindex="0" aria-selected="${fileKey(f) === selectedKey}" data-index="${index}" title="${escapeHtml(f.name)}">
+					<div class="cardPreview" style="background:color-mix(in srgb, ${f.category.color} 10%, transparent)">${fileIcon(f.category)}</div>
+					<div class="cardBody"><div><div class="cardName ellipsis">${escapeHtml(f.name)}</div>
+						<div class="meta">${formatSize(f.size)}, ${formatDate(f.modified)}</div></div>${actionButtons(index)}</div></div>`).join("")}</div>`
+		} else {
+			const arrow = (key) => (sortKey === key ? (sortAscending ? " ↑" : " ↓") : "")
+			const sortState = (key) => (sortKey === key ? (sortAscending ? "ascending" : "descending") : "none")
+			$("content").innerHTML = notice + `<table aria-label="Files"><thead><tr>
+				<th aria-sort="${sortState("name")}"><button type="button" data-sort="name">Name${arrow("name")}</button></th>
+				<th class="hideNarrow" aria-sort="${sortState("month")}"><button type="button" data-sort="month">Location${arrow("month")}</button></th>
+				<th class="hideNarrow" aria-sort="${sortState("modified")}"><button type="button" data-sort="modified">Added${arrow("modified")}</button></th>
+				<th aria-sort="${sortState("size")}"><button type="button" data-sort="size">Size${arrow("size")}</button></th><th><span class="hideNarrow" style="position:absolute;width:1px;height:1px;overflow:hidden">Actions</span></th></tr></thead><tbody>
+				${visible.map((f, index) => `<tr class="file" tabindex="0" aria-selected="${fileKey(f) === selectedKey}" data-index="${index}">
+					<td><div class="nameCell">${fileIcon(f.category)}<span class="ellipsis">${escapeHtml(f.name)}</span></div></td>
+					<td class="muted hideNarrow">${f.category.folder} / ${escapeHtml(f.month)}</td>
+					<td class="muted hideNarrow">${formatDate(f.modified)}</td>
+					<td class="muted">${formatSize(f.size)}</td>
+					<td class="actionsCell">${actionButtons(index)}</td></tr>`).join("")}</tbody></table>`
+			$("content").querySelectorAll("th button[data-sort]").forEach((th) => {
+				th.addEventListener("click", () => {
+					const key = th.dataset.sort
+					sortAscending = sortKey === key ? !sortAscending : key === "name"
+					sortKey = key
+					render()
+				})
+			})
+		}
+		$("content").querySelectorAll("[data-index]").forEach((element) => {
+			if (element.classList.contains("action")) {
+				element.addEventListener("click", (event) => {
+					event.stopPropagation()
+					fileAction(element.dataset.action, visible[Number(element.dataset.index)])
+				})
+				return
+			}
+			const entry = visible[Number(element.dataset.index)]
+			element.addEventListener("click", () => selectFile(entry))
+			element.addEventListener("dblclick", () => openFile(entry))
+			element.addEventListener("keydown", (event) => {
+				if (event.key === "Enter") {
+					openFile(entry)
+				} else if (event.key === " ") {
+					event.preventDefault()
+					selectFile(entry)
+				}
+			})
+		})
+	}
+
+	function fileParameters(entry, trash = activeView === "trash") {
+		return new URLSearchParams({ category: entry.category.folder, month: entry.month, name: entry.name, trash: trash ? "1" : "0" })
+	}
+
+	async function openFile(entry) {
+		// In the app window, files open in their Windows app straight from the USB.
+		try {
+			const result = await api("/api/launch?" + fileParameters(entry), { method: "POST" }).then((r) => r.json())
+			if (result.ok) {
+				toast(`<b class='ok'>Opening</b> ${escapeHtml(entry.name)}`)
+				return
+			}
+		} catch (error) {
+			if (error.message === "locked") {
+				return
+			}
+		}
+		// Browser fallback: PDFs and text preview in a tab; Office files download.
+		const previewable = ["pdf", "txt", "md", "csv"].includes(getExtension(entry.name))
+		const parameters = fileParameters(entry)
+		parameters.set("t", TOKEN)
+		parameters.set("s", session)
+		parameters.set("download", previewable ? "0" : "1")
+		window.open("/api/open?" + parameters.toString(), previewable ? "_blank" : "_self")
+	}
+
+	function closeDetails() {
+		selectedKey = ""
+		$("details").classList.remove("open")
+		document.querySelectorAll('[aria-selected="true"]').forEach((element) => element.setAttribute("aria-selected", "false"))
+	}
+
+	async function selectFile(entry) {
+		selectedKey = fileKey(entry)
+		render()
+		const inTrash = activeView === "trash"
+		const extension = entry.name.includes(".") ? "." + getExtension(entry.name) : ""
+		const base = entry.name.slice(0, entry.name.length - extension.length)
+		$("details").classList.add("open")
+		$("detailsInner").innerHTML = `
+			<div class="detailsTop"><h2>Details</h2><button type="button" class="iconButton" id="detailsClose" title="Close details" aria-label="Close details">${ICONS.close}</button></div>
+			<div class="detailsHero" style="background:color-mix(in srgb, ${entry.category.color} 12%, transparent)">${fileIcon(entry.category)}</div>
+			<div class="renameRow"><input id="renameInput" aria-label="File name" value="${escapeHtml(base)}" ${inTrash ? "disabled" : ""}><span class="extension">${escapeHtml(extension)}</span></div>
+			<div class="detailButtons">
+				<button type="button" class="button primary" id="detailsOpen">${ICONS.open} Open</button>
+				${inTrash
+					? `<button type="button" class="button" id="detailsRestore">${ICONS.restore} Restore</button>
+						<button type="button" class="button danger" id="detailsPurge">${ICONS.purge} Delete forever</button>`
+					: `<button type="button" class="button danger" id="detailsDelete">${NAV_ICONS.trash.replace('width="20" height="20"', 'width="16" height="16"')} Trash</button>`}
+			</div>
+			<dl class="infoList">
+				<dt>Type</dt><dd>${TYPE_LABELS[entry.category.folder] || entry.category.folder} (${escapeHtml(extension.toLowerCase())})</dd>
+				<dt>Size</dt><dd>${formatSize(entry.size)} (${entry.size.toLocaleString()} bytes)</dd>
+				<dt>Location</dt><dd>${entry.category.folder} / ${escapeHtml(entry.month)}</dd>
+				<dt>Added</dt><dd>${new Date(entry.modified).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}</dd>
+			</dl>
+			<section class="panelSection" id="metadataSection" aria-label="Metadata">${inTrash ? "<p>Restore this file to see or edit its metadata.</p>" : "<p>Reading metadata…</p>"}</section>`
+		$("detailsClose").addEventListener("click", () => {
+			closeDetails()
+			render()
+		})
+		$("detailsOpen").addEventListener("click", () => openFile(entry))
+		const bind = (id, action) => {
+			if ($(id)) {
+				$(id).addEventListener("click", () => fileAction(action, entry))
+			}
+		}
+		bind("detailsDelete", "delete")
+		bind("detailsRestore", "restore")
+		bind("detailsPurge", "purge")
+		const renameInput = $("renameInput")
+		const commitRename = async () => {
+			const newName = renameInput.value.trim()
+			if (!newName || newName === base) {
+				renameInput.value = base
+				return
+			}
+			const result = await postJSON("/api/rename?" + fileParameters(entry, false), { newName })
+			if (!result.ok) {
+				toast(`<b class='bad'>Rename failed</b> ${escapeHtml(result.message)}`)
+				renameInput.value = base
+				return
+			}
+			toast(`<b class='ok'>Renamed</b> ${escapeHtml(result.name)}`)
+			await refreshFiles()
+			const renamed = allFiles.find((f) => f.name === result.name && f.month === entry.month && f.category === entry.category)
+			if (renamed) {
+				selectFile(renamed)
+			}
+		}
+		renameInput.addEventListener("keydown", (event) => {
+			if (event.key === "Enter") {
+				renameInput.blur()
+			} else if (event.key === "Escape") {
+				renameInput.value = base
+				renameInput.blur()
+			}
+		})
+		renameInput.addEventListener("change", commitRename)
+		if (!inTrash) {
+			loadMetadata(entry)
+		}
+	}
+
+	async function loadMetadata(entry) {
+		const section = $("metadataSection")
+		let result
+		try {
+			result = await api("/api/metadata?" + fileParameters(entry, false)).then((r) => r.json())
+		} catch (error) {
+			return
+		}
+		if (fileKey(entry) !== selectedKey) {
+			return
+		}
+		const notes = (result.notes || []).map((note) => `<p class="note">${escapeHtml(note)}</p>`).join("")
+		if (!result.supported) {
+			section.innerHTML = `<h3>${ICONS.shield} Metadata</h3>${notes || "<p>This file type has no metadata to edit.</p>"}`
+			return
+		}
+		const fields = result.fields || {}
+		const info = Object.entries(result.info || {}).filter(([, value]) => value)
+		const hasData = Object.values(fields).some((v) => v) || info.length > 0
+		section.innerHTML = `
+			<div class="panelHead"><h3>${ICONS.shield} Metadata</h3><span class="chip ${hasData ? "alert" : "good"}">${hasData ? "Contains info" : "Clean"}</span></div>
+			<p>${escapeHtml(result.format)}: what other people see when you share this file.</p>
+			<form id="metadataForm">
+				${(result.editable || []).sort((a, b) => Object.keys(FIELD_LABELS).indexOf(a) - Object.keys(FIELD_LABELS).indexOf(b)).map((key) => `
+					<label class="field">${FIELD_LABELS[key] || key}
+						${key === "comments"
+							? `<textarea name="${key}" rows="2">${escapeHtml(fields[key] || "")}</textarea>`
+							: `<input name="${key}" value="${escapeHtml(fields[key] || "")}">`}</label>`).join("")}
+				${info.length ? `<dl class="infoList">${info.map(([key, value]) =>
+					`<dt>${INFO_LABELS[key] || key}</dt><dd>${escapeHtml(/created|modified/.test(key) ? formatMetaDate(value) : value)}</dd>`).join("")}</dl>` : ""}
+				<div class="detailButtons">
+					<button type="submit" class="button primary" id="saveMetadata">Save metadata</button>
+					<button type="button" class="button" id="cleanMetadata">${ICONS.sparkle} Clean all</button>
+				</div>
+			</form>${notes}`
+		$("metadataForm").addEventListener("submit", async (event) => {
+			event.preventDefault()
+			const values = Object.fromEntries(new FormData(event.target).entries())
+			const button = $("saveMetadata")
+			button.disabled = true
+			button.setAttribute("aria-busy", "true")
+			button.textContent = "Saving…"
+			await saveMetadata(entry, { fields: values, clean: false }, "Metadata saved")
+		})
+		$("cleanMetadata").addEventListener("click", async () => {
+			const confirmed = await confirmDialog("Clean all metadata?",
+				`Removes author, title, company, comments, software and edit history from “${entry.name}”. The file’s content stays the same.`, "Clean metadata", false)
+			if (confirmed) {
+				await saveMetadata(entry, { fields: {}, clean: true }, "Metadata cleaned")
+			}
+		})
+	}
+
+	async function saveMetadata(entry, body, message) {
+		try {
+			const result = await postJSON("/api/metadata?" + fileParameters(entry, false), body)
+			if (!result.ok) {
+				toast(`<b class='bad'>Failed</b> ${escapeHtml(result.message)}`)
+				return
+			}
+			toast(`<b class='ok'>${message}</b> ${escapeHtml(entry.name)}`)
+			await refreshFiles()
+			const updated = allFiles.find((f) => fileKey(f) === fileKey(entry))
+			if (updated) {
+				selectFile(updated)
+			}
+		} catch (error) {
+			showClosed(error)
+		}
+	}
+
+	function confirmDialog(title, message, confirmLabel, danger = true) {
+		return new Promise((resolve) => {
+			const backdrop = document.createElement("div")
+			backdrop.className = "modalBackdrop"
+			backdrop.innerHTML = `<div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle"><h2 id="confirmTitle"></h2><p></p>
+				<div class="modalButtons"><button type="button" class="button">Cancel</button>
+				<button type="button" class="button ${danger ? "destructive" : "primary"}"></button></div></div>`
+			backdrop.querySelector("h2").textContent = title
+			backdrop.querySelector("p").textContent = message
+			const [cancelButton, confirmButton] = backdrop.querySelectorAll("button")
+			confirmButton.textContent = confirmLabel
+			const close = (result) => {
+				backdrop.remove()
+				document.removeEventListener("keydown", onKey)
+				resolve(result)
+			}
+			const onKey = (event) => {
+				if (event.key === "Escape") {
+					close(false)
+				}
+			}
+			cancelButton.addEventListener("click", () => close(false))
+			confirmButton.addEventListener("click", () => close(true))
+			backdrop.addEventListener("click", (event) => {
+				if (event.target === backdrop) {
+					close(false)
+				}
+			})
+			document.addEventListener("keydown", onKey)
+			document.body.appendChild(backdrop)
+			cancelButton.focus()
+		})
+	}
+
+	async function fileAction(action, entry) {
+		if (action === "purge") {
+			const confirmed = await confirmDialog("Delete forever?",
+				`“${entry.name}” will be removed from the drive. This can’t be undone.`, "Delete forever")
+			if (!confirmed) {
+				return
+			}
+		}
+		const path = action === "restore" ? "/api/restore" : "/api/delete"
+		try {
+			const response = await api(path + "?" + fileParameters(entry).toString(), { method: "POST" })
+			const result = await response.json()
+			const labels = { delete: "Moved to Trash", restore: "Restored", purge: "Deleted forever" }
+			toast(result.ok
+				? `<b class='ok'>${labels[action]}</b> ${escapeHtml(entry.name)}`
+				: `<b class='bad'>Failed</b> ${escapeHtml(result.message)}`)
+		} catch (error) {
+			showClosed(error)
+			return
+		}
+		if (fileKey(entry) === selectedKey) {
+			closeDetails()
+		}
+		await refreshFiles()
+	}
+
+	async function uploadFile(file) {
+		if (!categoryByExtension[getExtension(file.name)]) {
+			return { ok: false, message: "file type not allowed" }
+		}
+		if (file.size > maxFileSizeMB * 1024 * 1024) {
+			return { ok: false, message: `larger than ${maxFileSizeMB} MB` }
+		}
+		const form = new FormData()
+		form.append("file", file, file.name)
+		try {
+			const response = await api("/api/upload", { method: "POST", body: form })
+			return await response.json()
+		} catch (error) {
+			return { ok: false, message: error.message === "locked" ? "DPLocker is locked" : "DPLocker isn’t running" }
+		}
+	}
+
+	async function handleFiles(files) {
+		if (files.length === 0 || !connected) {
+			return
+		}
+		const uploadButton = $("uploadButton")
+		uploadButton.disabled = true
+		uploadButton.setAttribute("aria-busy", "true")
+		uploadButton.lastChild.textContent = ` Adding ${files.length} file${files.length === 1 ? "" : "s"}…`
+		let savedCount = 0
+		let cleanedCount = 0
+		for (const file of files) {
+			const result = await uploadFile(file)
+			if (result.ok) {
+				savedCount += 1
+				cleanedCount += result.cleaned ? 1 : 0
+			} else {
+				toast(`<b class='bad'>Rejected</b> ${escapeHtml(file.name)}: ${escapeHtml(result.message)}`)
+			}
+		}
+		if (savedCount > 0) {
+			toast(`<b class='ok'>Added</b> ${savedCount} file${savedCount === 1 ? "" : "s"}.`
+				+ (cleanedCount ? ` Metadata cleaned on ${cleanedCount}.` : ""))
+		}
+		uploadButton.disabled = false
+		uploadButton.removeAttribute("aria-busy")
+		uploadButton.lastChild.textContent = " Upload files"
+		await refreshFiles()
+	}
+
+	function setLayout(value) {
+		layout = value
+		try {
+			localStorage.setItem(LAYOUT_KEY, value)
+		} catch (error) {
+			// Layout just won't be remembered.
+		}
+		render()
+	}
+
+	async function saveSettings(changes) {
+		const result = await postJSON("/api/settings", { ...settings, ...changes })
+		settings = result
+		render()
+	}
+
+	$("uploadButton").addEventListener("click", () => $("filePicker").click())
+	$("filePicker").addEventListener("change", () => {
+		handleFiles([...$("filePicker").files])
+		$("filePicker").value = ""
+	})
+	$("search").addEventListener("input", render)
+	$("listViewButton").addEventListener("click", () => setLayout("list"))
+	$("gridViewButton").addEventListener("click", () => setLayout("grid"))
+	$("dismissWarning").addEventListener("click", () => saveSettings({ warningDismissed: true }))
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "/" && document.activeElement.tagName !== "INPUT" && document.activeElement.tagName !== "TEXTAREA") {
+			event.preventDefault()
+			$("search").focus()
+		} else if (event.key === "Escape" && selectedKey && !document.querySelector(".modalBackdrop:not([hidden])")) {
+			closeDetails()
+			render()
+		}
+	})
+
+	let dragDepth = 0
+	window.addEventListener("dragenter", (event) => {
+		event.preventDefault()
+		dragDepth += 1
+		document.body.classList.add("dragging")
+	})
+	window.addEventListener("dragleave", () => {
+		dragDepth -= 1
+		if (dragDepth <= 0) {
+			dragDepth = 0
+			document.body.classList.remove("dragging")
+		}
+	})
+	window.addEventListener("dragover", (event) => event.preventDefault())
+	window.addEventListener("drop", (event) => {
+		event.preventDefault()
+		dragDepth = 0
+		document.body.classList.remove("dragging")
+		// Dropped folders arrive as size-0 entries with no type; skip them.
+		handleFiles([...event.dataTransfer.files].filter((f) => f.type !== "" || f.size > 0))
+	})
+
+	// Keeps DPLocker.exe alive while this tab is open.
+	setInterval(() => {
+		fetch("/api/ping", { headers: { "X-Token": TOKEN } }).catch(() => showClosed())
+	}, PING_INTERVAL_MS)
+	// Tells DPLocker.exe to quit as soon as the tab closes; a refresh pings again and cancels it.
+	window.addEventListener("pagehide", () => {
+		navigator.sendBeacon("/api/quit?t=" + encodeURIComponent(TOKEN))
+	})
+
+	document.querySelectorAll("[data-close]").forEach((button) => {
+		button.addEventListener("click", () => {
+			$(button.dataset.close).hidden = true
+		})
+	})
+	document.querySelectorAll(".modalBackdrop[id]").forEach((backdrop) => {
+		backdrop.addEventListener("click", (event) => {
+			if (event.target === backdrop) {
+				backdrop.hidden = true
+			}
+		})
+	})
+	// External links go to the system browser instead of inside the app window.
+	document.addEventListener("click", (event) => {
+		const link = event.target.closest("a[href^='https://']")
+		if (!link) {
+			return
+		}
+		event.preventDefault()
+		fetch("/api/external?url=" + encodeURIComponent(link.href.replace(/\/$/, "")) + "&t=" + encodeURIComponent(TOKEN), { method: "POST" })
+	})
+
+	$("aboutButton").addEventListener("click", () => {
+		$("aboutBackdrop").hidden = false
+	})
+
+	function showAuth(mode) {
+		$("authScreen").hidden = false
+		$("drivePanel").hidden = true
+		$("setupPanel").hidden = mode !== "setup"
+		$("loginPanel").hidden = mode !== "login"
+		$("setupError").textContent = ""
+		$("loginError").textContent = ""
+		if (mode === "login") {
+			$("loginPassword").value = ""
+			$("loginCode").value = ""
+			$("loginPassword").focus()
+		} else {
+			beginSetup()
+		}
+	}
+
+	function renderQr(target, result) {
+		target.innerHTML = `<img alt="QR code for your authenticator app" src="${result.qr}">
+			<div class="secretLabel">Can’t scan? Enter this key by hand:</div>
+			<code class="secret">${result.secret.match(/.{1,4}/g).join(" ")}</code>`
+	}
+
+	async function beginSetup() {
+		renderQr($("setupQr"), await postJSON("/api/auth/setup-begin", { accountName: $("setupAccount").value }))
+	}
+
+	async function unlocked() {
+		$("authScreen").hidden = true
+		connected = true
+		setTimeout(() => checkForUpdates(false), 1500)
+		$("content").innerHTML = Array.from({ length: 5 }, () =>
+			`<div class="skeleton" aria-hidden="true"><i style="width:24px;height:30px"></i><i style="width:38%"></i><i style="width:14%;margin-left:auto"></i></div>`).join("")
+		await loadConfig()
+		await refreshFiles()
+	}
+
+	$("setupAccount").addEventListener("change", beginSetup)
+	$("setupForm").addEventListener("submit", async (event) => {
+		event.preventDefault()
+		const password = $("setupPassword").value
+		if (password !== $("setupConfirm").value) {
+			$("setupError").textContent = "The two passwords don’t match. Type them again."
+			return
+		}
+		const result = await postJSON("/api/auth/setup-finish", {
+			password, code: $("setupCode").value, accountName: $("setupAccount").value,
+		})
+		if (!result.ok) {
+			$("setupError").textContent = result.message
+			return
+		}
+		setSession(result.session)
+		await unlocked()
+		toast("<b class='ok'>Protected</b> Password and authenticator are set up.")
+	})
+	$("loginForm").addEventListener("submit", async (event) => {
+		event.preventDefault()
+		const button = $("loginForm").querySelector("button")
+		button.disabled = true
+		const result = await postJSON("/api/auth/login", {
+			password: $("loginPassword").value, code: $("loginCode").value,
+		}).finally(() => {
+			button.disabled = false
+		})
+		if (!result.ok) {
+			$("loginError").textContent = result.message
+			$("loginCode").value = ""
+			$("loginCode").focus()
+			return
+		}
+		setSession(result.session)
+		await unlocked()
+	})
+	$("lockButton").addEventListener("click", async () => {
+		await fetch("/api/auth/logout", { method: "POST", headers: { "X-Token": TOKEN } })
+		setSession("")
+		closeDetails()
+		showAuth("login")
+	})
+
+	function settingsMessage(text, isOk) {
+		$("settingsMessage").textContent = text
+		$("settingsMessage").className = "formMessage " + (isOk ? "ok" : "bad")
+	}
+	$("settingsButton").addEventListener("click", () => {
+		$("settingsBackdrop").hidden = false
+		$("settingsMessage").textContent = ""
+		$("relinkQr").innerHTML = ""
+		$("relinkForm").hidden = true
+		$("autoCleanToggle").checked = settings.autoClean
+		$("warningToggle").checked = !settings.warningDismissed
+		$("updateToggle").checked = !settings.updateCheckDisabled
+		$("settingsBackdrop").querySelectorAll("form input").forEach((input) => {
+			input.value = ""
+		})
+	})
+	$("autoCleanToggle").addEventListener("change", async (event) => {
+		await saveSettings({ autoClean: event.target.checked })
+		settingsMessage(event.target.checked ? "New uploads will be cleaned." : "Auto-clean turned off.", true)
+	})
+	$("warningToggle").addEventListener("change", (event) => saveSettings({ warningDismissed: !event.target.checked }))
+	$("passwordForm").addEventListener("submit", async (event) => {
+		event.preventDefault()
+		if ($("newPassword").value !== $("newPasswordConfirm").value) {
+			settingsMessage("The new passwords don’t match. Type them again.", false)
+			return
+		}
+		const result = await postJSON("/api/auth/change-password", {
+			currentPassword: $("currentPassword").value, code: $("passwordCode").value, newPassword: $("newPassword").value,
+		})
+		settingsMessage(result.ok ? "Password changed." : result.message, result.ok)
+		if (result.ok) {
+			$("passwordForm").reset()
+		}
+	})
+	$("relinkStart").addEventListener("click", async () => {
+		renderQr($("relinkQr"), await postJSON("/api/auth/relink-begin", { accountName: $("relinkAccount").value }))
+		$("relinkForm").hidden = false
+	})
+	$("relinkForm").addEventListener("submit", async (event) => {
+		event.preventDefault()
+		const result = await postJSON("/api/auth/relink-finish", {
+			password: $("relinkPassword").value, code: $("relinkCode").value, accountName: $("relinkAccount").value,
+		})
+		settingsMessage(result.ok ? "Authenticator re-linked. You can remove the old entry from your authenticator app." : result.message, result.ok)
+		if (result.ok) {
+			$("relinkForm").hidden = true
+			$("relinkQr").innerHTML = ""
+		}
+	})
+
+	const DRIVE_ICON = `<svg aria-hidden="true" focusable="false" width="22" height="22" viewBox="0 0 24 24" ${STROKE}><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M9.5 6h1M13.5 6h1M6 14h12"/></svg>`
+
+	async function showDrivePicker() {
+		$("authScreen").hidden = false
+		$("drivePanel").hidden = false
+		$("setupPanel").hidden = true
+		$("loginPanel").hidden = true
+		$("driveError").textContent = ""
+		const result = await fetch("/api/drives", { headers: { "X-Token": TOKEN } }).then((r) => r.json())
+		$("driveList").innerHTML = result.drives.length
+			? result.drives.map((drive) => `<button type="button" class="driveOption" data-path="${escapeHtml(drive.path)}">${DRIVE_ICON}
+				<span><b>${escapeHtml(drive.label || "USB drive")} (${escapeHtml(drive.path.replace(/\\$/, ""))})</b>
+				<span class="meta">${drive.hasLocker ? "Has a DPLocker locker" : "No locker yet"}, ${formatSize(drive.free)} free</span></span></button>`).join("")
+			: `<p class="authHint">No USB drive found. Plug one in, then check again.</p>`
+		$("driveList").querySelectorAll(".driveOption").forEach((button) => {
+			button.addEventListener("click", async () => {
+				const response = await fetch("/api/drives", {
+					method: "POST", headers: { "X-Token": TOKEN, "Content-Type": "application/json" },
+					body: JSON.stringify({ path: button.dataset.path }),
+				}).then((r) => r.json())
+				if (!response.ok) {
+					$("driveError").textContent = response.message
+					return
+				}
+				$("drivePanel").hidden = true
+				startApp()
+			})
+		})
+	}
+	$("driveRefresh").addEventListener("click", showDrivePicker)
+
+	async function showLicense(doc) {
+		document.querySelectorAll(".licenseTabs button").forEach((button) => {
+			button.setAttribute("aria-pressed", String(button.dataset.doc === doc))
+		})
+		$("licenseText").textContent = await fetch("/api/license?doc=" + doc, { headers: { "X-Token": TOKEN } }).then((r) => r.text())
+	}
+	$("licenseButton").addEventListener("click", () => {
+		$("aboutBackdrop").hidden = true
+		$("licenseBackdrop").hidden = false
+		showLicense("license")
+	})
+	document.querySelectorAll(".licenseTabs button").forEach((button) => {
+		button.addEventListener("click", () => showLicense(button.dataset.doc))
+	})
+
+	let pendingUpdate = null
+
+	function renderUpdateBanner() {
+		const show = pendingUpdate && pendingUpdate.available && !pendingUpdate.skipped && !pendingUpdate.dismissed
+		$("updateBanner").hidden = !show
+		if (show) {
+			$("updateVersion").textContent = pendingUpdate.version
+			const notes = (pendingUpdate.notes || "").trim()
+			$("updateNotes").textContent = notes.length > 400 ? notes.slice(0, 400) + "…" : notes
+		}
+	}
+
+	async function checkForUpdates(force) {
+		try {
+			const result = await api("/api/update/check" + (force ? "?force=1" : "")).then((r) => r.json())
+			pendingUpdate = result
+			renderUpdateBanner()
+			return result
+		} catch (error) {
+			return { available: false, message: "Couldn’t check for updates." }
+		}
+	}
+
+	$("updateLater").addEventListener("click", () => {
+		pendingUpdate.dismissed = true
+		renderUpdateBanner()
+	})
+	$("updateSkip").addEventListener("click", async () => {
+		await saveSettings({ skippedVersion: pendingUpdate.version })
+		pendingUpdate.skipped = true
+		renderUpdateBanner()
+	})
+	$("updateNow").addEventListener("click", async () => {
+		const button = $("updateNow")
+		button.disabled = true
+		button.setAttribute("aria-busy", "true")
+		button.textContent = "Downloading…"
+		try {
+			const result = await postJSON("/api/update/install", {})
+			if (!result.ok) {
+				toast(`<b class='bad'>Update failed</b> ${escapeHtml(result.message)}`)
+				button.disabled = false
+				button.removeAttribute("aria-busy")
+				button.textContent = "Update now"
+				return
+			}
+			$("updateTitle").textContent = `Installing DPLocker ${result.version}…`
+			$("updateNotes").textContent = "DPLocker will close and reopen on its own."
+			button.textContent = "Restarting…"
+		} catch (error) {
+			showClosed(error)
+		}
+	})
+	$("updateToggle").addEventListener("change", (event) => saveSettings({ updateCheckDisabled: !event.target.checked }))
+	$("updateCheckNow").addEventListener("click", async () => {
+		$("updateStatus").textContent = "Checking GitHub…"
+		const result = await checkForUpdates(true)
+		if (result.available) {
+			if (result.skipped) {
+				result.skipped = false
+				renderUpdateBanner()
+			}
+			$("updateStatus").textContent = `DPLocker ${result.version} is available. Close Settings to update.`
+		} else {
+			$("updateStatus").textContent = result.message
+				? `Couldn’t check: ${result.message}.`
+				: `You’re on the latest version (${result.current || "__VERSION__"}).`
+		}
+	})
+
+	async function startApp() {
+		try {
+			const status = await fetch("/api/auth/status", { headers: { "X-Token": TOKEN } }).then((r) => r.json())
+			if (status.needsDrive) {
+				showDrivePicker()
+			} else if (!status.configured) {
+				showAuth("setup")
+			} else if (!session) {
+				showAuth("login")
+			} else {
+				await unlocked()
+			}
+		} catch (error) {
+			showClosed(error)
+		}
+	}
+
+	startApp()
+</script>
+</body>
+</html>
